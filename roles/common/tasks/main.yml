@@ -1,0 +1,45 @@
+---
+# tasks file for common
+
+- name: install container engine [docker] and iproute-tc
+  package: 
+    name: 
+      - docker
+      - iproute-tc
+    state: present
+
+- name: start the container engine
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Copy kubernetes repo file
+  copy:
+    src: kubernetes.repo
+    dest: /etc/yum.repos.d/
+
+- name: Install kubectl, kubelet, kubeadm programs
+  yum:
+    name:
+      - kubectl
+      - kubelet
+      - kubeadm
+    state: present
+    disable_excludes: kubernetes
+
+- name: change the cgroup driver to systemd
+  copy:
+    src: daemon.json
+    dest: /etc/docker/
+  notify: restart docker
+
+- name: enable bridging in iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+
+- name: enable bridging in ip6tables
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
