@@ -1,0 +1,7 @@
+---
+# vars file for provision
+
+key_name: mypem11
+sec_grp: ssh-only
+ami_id: ami-0a9d27a9f4f5c0efc 
+os_type: t2.micro
