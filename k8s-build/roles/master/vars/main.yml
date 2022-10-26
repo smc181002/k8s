@@ -1,0 +1,6 @@
+---
+# vars file for master
+
+net_name: "10.240.0.0/16"
+kube_user: "ec2-user"
+home_path: "{{lookup('env', 'HOME')}}"

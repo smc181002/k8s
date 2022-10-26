@@ -1,0 +1,38 @@
+---
+# tasks file for provision
+#
+- name: install boto
+  pip:
+    name: boto
+
+- name: create kube master
+  ec2:
+    key_name: "{{ key_name }}"
+    group: "{{ sec_grp }}"
+    instance_type: "{{ os_type }}"
+    image: "{{ ami_id }}"
+    wait: true
+    region: ap-south-1
+    exact_count: 1
+    count_tag:
+      Name: kube_master
+    instance_tags:
+      Name: kube_master
+      App: kube
+  register: kube_ec2_master
+
+- name: create kube slaves
+  ec2:
+    key_name: "{{ key_name }}"
+    group: "{{ sec_grp }}"
+    instance_type: "{{ os_type }}"
+    image: "{{ ami_id }}"
+    wait: true
+    region: ap-south-1
+    exact_count: 2
+    count_tag:
+      Name: kube_slave
+    instance_tags:
+      Name: kube_slave
+      App: kube
+  register: kube_ec2_slave

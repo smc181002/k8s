@@ -1,0 +1,6 @@
+---
+# tasks file for slave
+
+- name: run the join command
+  shell: "{{join_command}}"
+  ignore_errors: yes

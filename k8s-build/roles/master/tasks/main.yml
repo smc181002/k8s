@@ -1,0 +1,26 @@
+---
+# tasks file for master
+
+- name: init kubectl
+  command: "kubeadm init --pod-network-cidr={{ net_name }} --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+  ignore_errors: yes
+
+- name: create .kube dir
+  file:
+    path: $HOME/.kube
+    state: directory
+    mode: 0755
+
+- name: copy config
+  command: cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+- name: change ownership
+  shell: chown $(id -u):$(id -g) $HOME/.kube/config
+
+- name: create token for connecting workernodes
+  command: 'kubeadm token create --print-join-command'
+  register: jointoken
+
+- name: create flannel overlay network
+  shell: "curl https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml | sed 's@10.244.0.0/16@{{net_name}}@' > kube-flannel.yml; kubectl apply -f kube-flannel.yml"
+

@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  remote_user: root
+  collections: 
+    - smc181002.k8s
+  roles:
+    - common

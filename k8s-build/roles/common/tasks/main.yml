@@ -22,9 +22,7 @@
 
 - name: "Install APT Transport HTTPS [Debian Family]"
   apt:
-    name: 
-      - "apt-transport-https"
-      - ca-certificates
+    name: "apt-transport-https"
     state: "present"
     update_cache: true
   when: ansible_facts.os_family == 'Debian'
@@ -66,7 +64,7 @@
   when: ansible_facts.os_family == 'RedHat'
 
 - name: Install kubectl, kubelet, kubeadm programs [Debian Family]
-  apt:
+  yum:
     name:
       - kubectl
       - kubelet
